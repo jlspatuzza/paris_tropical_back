@@ -95,13 +95,17 @@ router.post('/signup', function(req, res, next) {
 
 
       var newUser = new UserModel({
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
+        firstname: 'JL' ,
+        // req.body.firstname
+        lastname:'S' ,
+        // req.body.lastname
         country: body.sys.country,
         city: body.name,
 
-        email: req.body.email,
-        password: req.body.password
+        email: 'jlspatuzza@hotmail.fr' ,
+        // req.body.email
+        password: 'toto'
+        // req.body.password
       })
       newUser.save(
         function(error, user) {
@@ -113,6 +117,29 @@ router.post('/signup', function(req, res, next) {
 
   });
 
+});
+
+router.post('/signin', function(req, res, next) {
+  UserModel.findOne(
+    { email: 'jlspatuzza@hotmail.fr'  },
+// req.body.emailFromFront.toLowerCase()
+
+    function (err, user) {
+      console.log("JE SUIS ICI")
+      console.log(user)
+      // console.log(req.body.passwordFromFront)
+    if(user && user.password == 'toto'){
+      // 'req.body.passwordFromFront'
+      // req.session.user = user;
+      console.log('password ok')
+      console.log(user.password)
+      // res.redirect('/cities');
+    } else {
+      console.log("wrong password");
+
+      // res.redirect('/')
+    }
+  });
 });
 
 
