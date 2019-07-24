@@ -79,11 +79,13 @@ var request = require('request');
 
 
 
-
 router.post('/signup', function(req, res, next) {
   console.log("USER ADDED : --->");
+  console.log('CHECK CHECK',req.body);
+  console.log('VIIILLE',req.body.city);
+  var city = req.body.city;
   // We are using the ES6 new concatenation syntax. You could use the ES5 method as well --> "string"+variable+"string"
-  request('http://api.openweathermap.org/data/2.5/weather?q=London&appid=fc07f13e149c30c7f3bc9c87c606a95f&units=metric&lang=fr', function(error, response, body) {
+  request('http://api.openweathermap.org/data/2.5/weather?q='+ city +'&appid=fc07f13e149c30c7f3bc9c87c606a95f&units=metric&lang=fr', function(error, response, body) {
       body = JSON.parse(body);
     if (body.cod == '404' || body.cod == '400') {
       console.log("STEP 1 | HERE IS THE BODY ERROR --->", body)
@@ -91,28 +93,37 @@ router.post('/signup', function(req, res, next) {
     } else {
       console.log("STEP 1 | HERE IS THE BODY ---> ", body)
 
-
-
-
       var newUser = new UserModel({
-        firstname: 'JL' ,
-        // req.body.firstname
-        lastname:'S' ,
+        firstname: req.body.firstname ,
+        // 
+        lastname: req.body.lastname ,
         // req.body.lastname
         country: body.sys.country,
+        
         city: body.name,
 
-        email: 'jlspatuzza@hotmail.fr' ,
+        email: req.body.email,
         // req.body.email
-        password: 'toto'
+        password: req.body.password
         // req.body.password
       })
-      newUser.save(
-        function(error, user) {
-          console.log("STEP 2 | USER SAVED ---> ", user)
-          // 3) Once the city is saved, and the script is completed, I want to ask my database to give me all the cities (it will return "citiesFromDataBase" as I defined it). To do so, I can use find()
 
-        });
+      UserModel.find(
+        { email: req.body.email},
+    // req.body.emailFromFront.toLowerCase()
+        function (err, user) {
+
+        if(!user){
+          newUser.save(
+            function(error, user) {
+              console.log("STEP 2 | USER SAVED ---> ", user)
+              res.json({result: true, user});
+              // 3) Once the city is saved, and the script is completed, I want to ask my database to give me all the cities (it will return "citiesFromDataBase" as I defined it). To do so, I can use find()
+    
+          });
+        } 
+      });
+
     }
 
   });
@@ -141,8 +152,5 @@ router.post('/signin', function(req, res, next) {
     }
   });
 });
-
-
-
 
 module.exports = router;
