@@ -14,7 +14,9 @@ var UserSchema = mongoose.Schema({
     country: String,
     city: String,
     email: String,
+    salt:String,
     password: String,
+    token:String
     // historiquePosition:[PositionSchema]
    });
 
