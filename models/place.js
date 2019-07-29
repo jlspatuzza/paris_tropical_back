@@ -16,8 +16,7 @@ var PlaceSchema = mongoose.Schema({
     phone: Number,
     descen: String,
     descpt:String,
-    password: String,
-    token:String
+    
     historiquePosition:[PositionSchema]
    });
 
