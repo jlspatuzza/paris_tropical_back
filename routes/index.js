@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var UserModel = require("../models/user");
 var request = require('request');
+var uid2 = require('uid2');
+var SHA256 = require("crypto-js/sha256");
+var encBase64 = require("crypto-js/enc-base64");
 
 /* GET home page. */
 // router.get('/', function(req, res, next) {
@@ -80,9 +83,9 @@ var request = require('request');
 
 
 router.post('/signup', function(req, res, next) {
-  //console.log("USER ADDED : --->");
-  //console.log('CHECK CHECK',req.body);
-  //console.log('VIIILLE',req.body.city);
+  console.log("USER ADDED : --->");
+  console.log('CHECK CHECK',req.body);
+  console.log('VIIILLE',req.body.city);
   var city = req.body.city;
   // We are using the ES6 new concatenation syntax. You could use the ES5 method as well --> "string"+variable+"string"
   request('http://api.openweathermap.org/data/2.5/weather?q='+ city +'&appid=fc07f13e149c30c7f3bc9c87c606a95f&units=metric&lang=fr', function(error, response, body) {
@@ -92,6 +95,8 @@ router.post('/signup', function(req, res, next) {
 
     } else {
       console.log("STEP 1 | HERE IS THE BODY ---> ", body)
+
+      var salt = uid2(32);
 
       var newUser = new UserModel({
         firstname: req.body.firstname ,
@@ -104,14 +109,18 @@ router.post('/signup', function(req, res, next) {
 
         email: req.body.email,
        
-        password: req.body.password
+        password : SHA256(req.body.password + salt).toString(encBase64),
+
+        salt:salt,
+
+        token: uid2(32)
        
       })
 
       UserModel.find(
         { email: req.body.email},
         function (err, user) {
-          //console.log("CONSOLE LOOOOG USER", user);
+          console.log("CONSOLE LOOOOG USER", user);
         if(user == 0){
           newUser.save(
             function(error, user) {
@@ -139,17 +148,21 @@ router.post('/signin', function(req, res, next) {
       //console.log("JE SUIS ICI")
       //console.log(user)
       // console.log(req.body.passwordFromFront)
-    if(user && user.password == req.body.password){
-      // 'req.body.passwordFromFront'
-      // req.session.user = user;
-      //console.log('password ok')
-      //console.log(user.password)
-      res.json({exist: true, user});
+      console.log('CONSOLE LOG PASSWORD :',req.body.password);
+      var hash = SHA256(req.body.password + user.salt).toString(encBase64);
+      console.log(hash)
 
-    } else {
-      console.log("wrong password");
-      res.json({exist: false, user});
-    }
+      if(user && hash == user.password){
+        // 'req.body.passwordFromFront'
+        // req.session.user = user;
+        //console.log('password ok')
+        //console.log(user.password)
+        res.json({exist: true, user});
+
+      } else {
+        console.log("wrong password");
+        res.json({exist: false, user});
+      }
   });
 });
 
