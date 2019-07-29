@@ -166,4 +166,24 @@ router.post('/signin', function(req, res, next) {
   });
 });
 
+router.get('/getmeteo', function(req, res, next) {
+  request('http://api.openweathermap.org/data/2.5/weather?q=Paris&appid=fc07f13e149c30c7f3bc9c87c606a95f&units=metric&lang=fr', function(error, response, body) {
+
+    var jsonBody = JSON.parse(body);
+    console.log("ON Y EST !!",jsonBody);
+    res.json({result: true, jsonBody});
+
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
 module.exports = router;
