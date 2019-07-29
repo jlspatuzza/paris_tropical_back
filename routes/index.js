@@ -95,17 +95,17 @@ router.post('/signup', function(req, res, next) {
 
       var newUser = new UserModel({
         firstname: req.body.firstname ,
-        
+
         lastname: req.body.lastname ,
-        
+
         country: body.sys.country,
-        
+
         city: body.name,
 
         email: req.body.email,
-       
+
         password: req.body.password
-       
+
       })
 
       UserModel.find(
@@ -121,7 +121,7 @@ router.post('/signup', function(req, res, next) {
           });
         }else{
           res.json({result: false});
-        } 
+        }
       });
 
     }
@@ -131,6 +131,7 @@ router.post('/signup', function(req, res, next) {
 });
 
 router.post('/signin', function(req, res, next) {
+  console.log('yo');
   UserModel.findOne(
     { email: req.body.email },
 // req.body.emailFromFront.toLowerCase()
