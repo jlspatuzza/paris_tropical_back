@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var UserModel = require("../models/user");
+var PlaceModel = require("../models/place");
 var request = require('request');
 var uid2 = require('uid2');
 var SHA256 = require("crypto-js/sha256");
@@ -166,6 +167,24 @@ router.post('/signin', function(req, res, next) {
       }
   });
 });
+
+
+router.get('/finder', function(req, res, next) {
+  console.log(req.query);
+
+  PlaceModel.find(
+    { placename: req.query.placename},
+    function (err, user) {
+      console.log("All data about place", user);
+
+
+  });
+
+
+});
+
+
+
 
 router.get('/getmeteo', function(req, res, next) {
   request('http://api.openweathermap.org/data/2.5/weather?q=Paris&appid=fc07f13e149c30c7f3bc9c87c606a95f&units=metric&lang=fr', function(error, response, body) {

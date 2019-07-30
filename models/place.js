@@ -16,8 +16,8 @@ var PlaceSchema = mongoose.Schema({
     phone: Number,
     descen: String,
     descpt:String,
-    
+
     historiquePosition:[PositionSchema]
    });
 
-module.exports = mongoose.model('user', UserSchema);
+module.exports = mongoose.model('place', PlaceSchema);
