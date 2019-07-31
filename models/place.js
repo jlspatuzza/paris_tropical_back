@@ -1,12 +1,7 @@
 var mongoose = require('mongoose');
 
 
-var PositionSchema = mongoose.Schema(
-  {
-    latitude: Number,
-    longitude: Number
-  }
-)
+
 
 var PlaceSchema = mongoose.Schema({
     placename : String,
@@ -16,8 +11,15 @@ var PlaceSchema = mongoose.Schema({
     phone: Number,
     descen: String,
     descpt:String,
+    urlimage: String,
+    wannado: Array,
+    latitude: Number,
+    longitude: Number
 
-    historiquePosition:[PositionSchema]
+
+
+
+
    });
 
 module.exports = mongoose.model('place', PlaceSchema);

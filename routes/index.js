@@ -172,8 +172,10 @@ router.post('/signin', function(req, res, next) {
 router.get('/finder', function(req, res, next) {
   console.log(req.query);
 
+
   PlaceModel.find(
-    { placename: req.query.placename},
+    { wannado:req.query.wannado},
+
     function (err, user) {
       console.log("All data about place", user);
 
